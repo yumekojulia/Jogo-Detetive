@@ -446,17 +446,49 @@ class Game:
                     img = images['locais'].get(self.current_accusation["local"])
                     if img: 
                         screen.blit(img, slot_positions[2])
-        
+
+        # Atualizei a parte de derrota para mostrar a resposta - J
         if self.game_state == "GAME_OVER":
+            # --- Fundo escuro ---
             s = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
             s.fill((0, 0, 0, 180))
             screen.blit(s, (0, 0))
+
+            # --- Derrota ---
             game_over_text = font.render("O TEMPO ACABOU!", True, (255, 0, 0))
-            text_rect = game_over_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 30))
+            text_rect = game_over_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 120))
             screen.blit(game_over_text, text_rect)
+
             lose_text = small_font.render("A equipe não conseguiu resolver o caso a tempo.", True, WHITE)
-            lose_rect = lose_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 20))
+            lose_rect = lose_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 80))
             screen.blit(lose_text, lose_rect)
+
+            # --- Título para a solução ---
+            solution_title_text = small_font.render("Solução do Caso:", True, (200, 200, 200))
+            solution_title_rect = solution_title_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 30))
+            screen.blit(solution_title_text, solution_title_rect)
+
+            # --- Pega os nomes e as imagens das cartas da solução ---
+            solucao_suspeito_nome = self.solution["suspeito"]
+            solucao_metodo_nome = self.solution["metodo"]
+            solucao_local_nome = self.solution["local"]
+
+            solucao_suspeito_img = images['suspeitos'][solucao_suspeito_nome]
+            solucao_metodo_img = images['metodos'][solucao_metodo_nome]
+            solucao_local_img = images['locais'][solucao_local_nome]
+
+            # --- Calcula as posições para centralizar as 3 cartas ---
+            card_width = 70
+            spacing = 20
+            total_width = (card_width * 3) + (spacing * 2)
+            start_x = (SCREEN_WIDTH - total_width) / 2
+            card_y = SCREEN_HEIGHT / 2 # Posição vertical das cartas
+
+            # --- Desenha as cartas da solução na tela ---
+            screen.blit(solucao_suspeito_img, (start_x, card_y))
+            screen.blit(solucao_metodo_img, (start_x + card_width + spacing, card_y))
+            screen.blit(solucao_local_img, (start_x + 2 * (card_width + spacing), card_y))
+
         
         if self.game_state == "WIN":
             s = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
